@@ -1,0 +1,6 @@
+pandas
+sqlalchemy
+tqdm
+jmespath
+aiohttp
+aiomysql

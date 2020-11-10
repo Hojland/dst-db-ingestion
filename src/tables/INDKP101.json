@@ -1,0 +1,12 @@
+{
+    "table_id": "INDKP101",
+    "index_vars": ["region", "sex"],
+    "dst_variables": {
+        "OMRÅDE": [">100"],
+        "ENHED": ["116"],
+        "KOEN": ["M", "K"],
+        "INDKOMSTTYPE": ["100"],
+        "Tid": [">2014"]
+    },
+    "format": "CSV"
+}
