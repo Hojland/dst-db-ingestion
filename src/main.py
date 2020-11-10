@@ -13,7 +13,7 @@ from dst import DST
 import settings
 
 
-def main():
+async def main():
     logger = utils.get_logger('printyboi.log')
     metadata_filelst = glob.glob(settings.METADATA_PATH.absolute().as_posix() + '/*.json')
     dst = DST()
@@ -59,4 +59,4 @@ def main():
 
 if __name__ == '__main__':
     asyncio.run(main())
-    await main()
+    #await main()
