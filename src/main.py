@@ -27,8 +27,10 @@ async def main():
 
         if await sql_utils.table_exists_notempty(mysql_engine_pool, 'input', f"dst_{metadata['table_id'].lower()}"):
             latest_date = await sql_utils.get_latest_date_in_table(mysql_engine_pool, f"input.dst_{metadata['table_id'].lower()}", date_col='time')
-            latest_date = datetime.strptime(str(latest_date), '%Y')
-            pass
+            try:
+                latest_date = datetime.strptime(str(latest_date), '%Y')
+            except ValueError: # i don't have the quarters yet. So wont implement it yet
+                latest_date = datetime.strptime(str(latest_date), '%YM%m')
         else:
             latest_date = datetime.strptime('2014-01-01', '%Y-%m-%d')
             # should then be used to change the call dynamically to this period
@@ -37,7 +39,7 @@ async def main():
 
         time_end = re.search('(M|K)\d{1,2}', metadata['dst_variables']['Tid'][0])
         if time_end:
-            metadata['dst_variables']['Tid'] = [f">{latest_date.year}{time_end[0]}"]
+            metadata['dst_variables']['Tid'] = [f">{latest_date.year}M{latest_date.month}"]
         else:
             metadata['dst_variables']['Tid'] = [f">{latest_date.year}"]
 
