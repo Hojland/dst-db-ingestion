@@ -80,7 +80,7 @@ async def create_table(mysql_engine_pool: aiomysql.Pool, table_name: str, col_da
         def_strings.append(index_str)
 
     create_table_query = f"""CREATE TABLE IF NOT EXISTS {table_name} ({','.join(def_strings)});"""
-    print(create_table_query)
+
     conn = await mysql_engine_pool.acquire()
     cur = await conn.cursor()
     await cur.execute(create_table_query)    
@@ -282,6 +282,7 @@ def get_dtype_trans(df: pd.DataFrame, str_len: int=150):
     obj_vars = [colname for colname in list(df) if df[colname].dtype == 'object']
     int_vars = [colname for colname in list(df) if df[colname].dtype == 'int64']
     float_vars = [colname for colname in list(df) if df[colname].dtype == 'float64']
+    date_vars = [colname for colname in list(df) if df[colname].dtype == 'datetime64[ns]']
 
     dtype_trans = {
         obj_var: f"VARCHAR({str_len})" for obj_var in obj_vars
@@ -291,5 +292,8 @@ def get_dtype_trans(df: pd.DataFrame, str_len: int=150):
     })
     dtype_trans.update({
         float_var: "FLOAT(14, 5)" for float_var in float_vars
+    })
+    dtype_trans.update({
+        date_var: "DATE" for date_var in date_vars
     })
     return dtype_trans

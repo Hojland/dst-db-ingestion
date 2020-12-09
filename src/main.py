@@ -32,14 +32,14 @@ async def main():
             except ValueError: # i don't have the quarters yet. So wont implement it yet
                 latest_date = datetime.strptime(str(latest_date), '%YM%m')
         else:
-            latest_date = datetime.strptime('2014-01-01', '%Y-%m-%d')
+            latest_date = datetime.strptime('2015-01-01', '%Y-%m-%d')
             # should then be used to change the call dynamically to this period
         
         #await dst.get_table_info("BEBRIT08")
 
         time_end = re.search('(M|K)\d{1,2}', metadata['dst_variables']['Tid'][0])
         if time_end:
-            metadata['dst_variables']['Tid'] = [f">{latest_date.year}M{latest_date.month}"]
+            metadata['dst_variables']['Tid'] = [f">{latest_date.year}M{latest_date.strftime('%m')}"]
         else:
             metadata['dst_variables']['Tid'] = [f">{latest_date.year}"]
 
@@ -48,6 +48,11 @@ async def main():
         except AssertionError as e:
             logging.info(f'failed with {e}, if concerning Tid, then it is probably the stuff in prod')
             continue
+
+        if time_end:
+            df['time'] = pd.to_datetime(df['time'], format='%YM%m')
+        else:
+            df['time'] = pd.to_datetime(df['time'], format='%Y')
 
         # NOT PIVOTING OTHER THAN ON DEMAND, SINCE IT RELIES ON WHAT CAN BE INDEXED IN SINGLE DATASET, AND THAT MAY BE LESS THAN ONE VARIABLE
         # THEREFORE INDHOLD IS ALSO NOT CHANGED

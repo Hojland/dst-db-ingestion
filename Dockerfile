@@ -9,6 +9,6 @@ RUN apt-get update && apt-get install -y \
   gcc \
   g++
 RUN pip install -r requirements.txt
-#RUN pip install jupyterlab
-#CMD ["sh", "-c", "jupyter lab --ip=0.0.0.0 --no-browser --NotebookApp.token=dst --allow-root"]
-CMD ["sh", "-c", "python main.py"]
+RUN pip install jupyterlab
+CMD ["sh", "-c", "jupyter lab --ip=0.0.0.0 --no-browser --NotebookApp.token=dst --allow-root"]
+#CMD ["sh", "-c", "python main.py"]
