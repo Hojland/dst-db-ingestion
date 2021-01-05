@@ -3,6 +3,8 @@ import json
 import sqlalchemy
 import pytz
 from datetime import datetime, timedelta
+import numpy as np
+import pandas as pd
 import logging
 import time
 import sys
@@ -107,6 +109,18 @@ def logical_operator_render(val1: str, val2: str, string_operator: str='=='):
         return val2 < val1
 
     return NotImplementedError("this string operator isn't implemented")
+
+def date_cat(dates, days: int=14):
+    bins_dt = pd.date_range(min(dates), max(dates)+timedelta(days=days), freq=f"{days}D")
+    bins_str = bins_dt.astype(str).values
+
+    labels = ['({}, {}]'.format(bins_str[i-1], bins_str[i]) for i in range(1, len(bins_str))]
+    unified_dates = pd.cut(dates.astype(np.int64)//10**9,
+                           bins=bins_dt.astype(np.int64)//10**9,
+                           labels=labels,
+                           include_lowest=True)
+    return unified_dates
+
 
 # keeping this not because we need it but because of inspo
 #lookup_cols = [short_cols_db[i] + short_cols[i] + short_cols[:i].count(short_cols[i]) if duplicates[i] else short_cols[i] for i in range(len(short_cols))]
