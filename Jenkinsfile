@@ -4,13 +4,8 @@ pipeline {
         stage('Build image') {
             steps {
                 script {
-                    withCredentials([
-                            usernamePassword(credentialsId: 'datascience-harbor', usernameVariable: 'DOCKER_USR', passwordVariable: 'DOCKER_PW')
-                        ])
-                    {
-                    sh "docker login -u '${DOCKER_USR}' -p ${DOCKER_PW} https://harbor.aws.c.dk/"
                     image = docker.build("${JOB_NAME}:${BUILD_ID}")
-                    }
+
                 }
             }
         }
